@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 Kira Kravchenko
+Copyright (c) 2024 ARC Lesion Segmentation Project Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,36 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+ADDITIONAL TERMS FOR DATASET AND PROCESSED RESULTS
+(Supplementary to the MIT License above)
+
+The processed results included in this repository — including automatically
+generated lesion masks, PNG visualizations, and quality metric tables — are
+provided for scientific, educational, and research purposes only.
+
+1. COMMERCIAL USE: Commercial use of the processed results requires prior
+   written agreement with the project authors.
+
+2. ATTRIBUTION: Any scientific publication, thesis, or research work making
+   use of this dataset or its results must cite both this project and the
+   original Aphasia Recovery Cohort dataset (OpenNeuro ds004884).
+
+3. RE-IDENTIFICATION: Attempting to re-identify research participants from
+   the anonymized data is strictly prohibited. Source data has been
+   de-identified in accordance with Safe Harbor guidelines, including
+   application of the spm_deface algorithm.
+
+4. ETHICAL USE: Users agree to use the data in compliance with applicable
+   research ethics standards, including the principles of the World Medical
+   Association Declaration of Helsinki.
+
+5. CLINICAL USE: The automatic segmentation results are not validated for
+   clinical use. Any clinical application requires prior verification by a
+   qualified neuroradiologist.
+
+6. MODIFICATIONS TO TERMS: The project authors reserve the right to amend
+   these additional terms for future versions of the dataset. Amendments
+   apply to subsequently released versions only.
