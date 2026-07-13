@@ -1,9 +1,7 @@
 function batch_evaluate(data_dir)
-    
     pkg load image;
     pkg load datatypes;
     addpath('src');
-
     all_files = dir(fullfile(data_dir, '*T2w*.nii'));
     file_names = {all_files.name};
     
@@ -14,7 +12,7 @@ function batch_evaluate(data_dir)
     end
     subject_ids = unique(subject_ids);
     
-    fprintf('Найдено участников: %d\n', length(subject_ids));
+    fprintf('Participants found: %d\n', length(subject_ids));
     
     results_subjects = cell(length(subject_ids), 1);
     results_dice = zeros(length(subject_ids), 1);
@@ -68,9 +66,8 @@ function batch_evaluate(data_dir)
         end
     end
     
-    fprintf('\nСводная таблица\n');
+    fprintf('\nSummary table\n');
     fprintf('%-12s %-10s %-12s %-12s\n', 'Subject', 'Dice', 'Vol_GT', 'Vol_Auto');
-    fprintf('%s\n', repmat('-', 1, 50));
     for i = 1:length(subject_ids)
         if ~isnan(results_dice(i))
             fprintf('%-12s %-10.4f %-12d %-12d\n', ...
@@ -96,9 +93,9 @@ function batch_evaluate(data_dir)
 
     valid_dice = results_dice(~isnan(results_dice));
     if ~isempty(valid_dice)
-        fprintf('Всего обработано: %d\n', length(valid_dice));
-        fprintf('Средний Dice: %.4f ± %.4f\n', mean(valid_dice), std(valid_dice));
-        fprintf('Медиана Dice: %.4f\n', median(valid_dice));
+        fprintf('Total processed: %d\n', length(valid_dice));
+        fprintf('Mean Dice: %.4f ± %.4f\n', mean(valid_dice), std(valid_dice));
+        fprintf('Median Dice: %.4f\n', median(valid_dice));
         fprintf('Min/Max: %.4f / %.4f\n', min(valid_dice), max(valid_dice));
         fprintf('Dice > 0.3: %d (%.1f%%)\n', ...
             sum(valid_dice > 0.3), 100*sum(valid_dice > 0.3)/length(valid_dice));

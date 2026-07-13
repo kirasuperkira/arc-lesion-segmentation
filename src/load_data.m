@@ -6,7 +6,7 @@ function [img, mask, info] = load_data(data_dir, subject_id)
     mask_files = dir(fullfile(data_dir, mask_pattern));
 
     if isempty(t2_files) || isempty(mask_files)
-        error('Файлы не найдены для %s', subject_id);
+        error('Files not found for %s', subject_id);
     end
 
     t2_path = fullfile(data_dir, t2_files(1).name);
@@ -23,9 +23,9 @@ function [img, mask, info] = load_data(data_dir, subject_id)
         info.mask_file = mask_files(1).name;
         info.img_size = size(img);
 
-        disp(sprintf('Успешно загружено: %s (Размер: %s)', subject_id, mat2str(size(img))));
+        disp(sprintf('Successfully loaded: %s (Size: %s)', subject_id, mat2str(size(img))));
 
     catch ME
-        error('Ошибка чтения: %s', ME.message);
+        error('Read error: %s', ME.message);
     end
 end

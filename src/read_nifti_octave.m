@@ -1,7 +1,7 @@
 function [img, info] = read_nifti_octave(filename)
     fid = fopen(filename, 'r');
     if fid == -1
-        error('Не удалось открыть файл: %s', filename);
+        error('Could not open file: %s', filename);
     end
 
     header = fread(fid, 348, 'uint8=>uint8');
@@ -9,7 +9,7 @@ function [img, info] = read_nifti_octave(filename)
 
     magic = char(header(345:348)');
     if ~ismember(magic, {'n+1', 'ni1'})
-        warning('Некорректный Magic number: %s', magic);
+        warning('Invalid Magic number: %s', magic);
     end
 
     dim = typecast(header(41:48), 'int16');
@@ -26,7 +26,7 @@ function [img, info] = read_nifti_octave(filename)
         case 64, precision = 'float64=>double';
         otherwise
             precision = 'uint8=>uint8';
-            warning('Неизвестный тип данных: %d', datatype);
+            warning('Unknown data type: %d', datatype);
     end
 
     fid = fopen(filename, 'r');

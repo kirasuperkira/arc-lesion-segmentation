@@ -1,148 +1,138 @@
 # ARC Lesion Segmentation Dataset
 
-> Автоматическая сегментация очагов поражения мозга на основе датасета Aphasia Recovery Cohort
+> Automatic segmentation of brain lesions based on the Aphasia Recovery Cohort dataset
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![GNU Octave](https://img.shields.io/badge/GNU%20Octave-11.1.0+-blue.svg)](https://www.gnu.org/software/octave/)
 [![Dataset: ARC](https://img.shields.io/badge/Dataset-ARC%20OpenNeuro%20ds004884-green.svg)](https://openneuro.org/datasets/ds004884)
 
-Датасет содержит результаты автоматической сегментации очагов поражения мозга, полученные на основе открытого репозитория хронических постинсультных пациентов с афазией — **Aphasia Recovery Cohort (ARC)**.
+This dataset contains the results of automatic brain lesion segmentation, derived from an open repository of chronic post-stroke patients with aphasia — the **Aphasia Recovery Cohort (ARC)**.
 
-Цель проекта - создание **воспроизводимого инструмента** для автоматического выделения областей поражения мозга на Т2-взвешенных МРТ-изображениях. Инструмент ориентирован на:
-- исследователей в области нейрореабилитации
-- разработчиков инструментов медицинской визуализации
-- специалистов в области ML для задач сегментации
+The goal of the project is to build a **reproducible tool** for automatically delineating brain lesion areas on T2-weighted MRI images. The tool is aimed at:
+- researchers in neurorehabilitation
+- developers of medical imaging tools
+- ML specialists working on segmentation tasks
 
-### Ключевые показатели
+### Key metrics
 
-- Обработано участников: 207
-- Средний Dice Score: 0.1704 ± 0.1183
-- Источник данных: OpenNeuro ds004884
-- Алгоритм: Пороговая сегментация (95-й перцентиль)
-- Среда выполнения: GNU Octave 11.1.0
+- Participants processed: 207
+- Mean Dice Score: 0.1704 ± 0.1183
+- Data source: OpenNeuro ds004884
+- Algorithm: Threshold-based segmentation (95th percentile)
+- Runtime environment: GNU Octave 11.1.0
 
----
-
-## Структура репозитория
+## Repository structure
 
 ```
 project-root/
 │
 ├── data/
-│   ├── raw/          # Исходные T2w-изображения и маски (NIfTI)
-│   ├── masks/        # Автоматические маски сегментации (.mat, 160×256×256)
-│   └── processed/    # Промежуточные результаты обработки
+│   ├── raw/          # Source T2w images and masks (NIfTI)
+│   ├── masks/        # Automatic segmentation masks (.mat, 160×256×256)
+│   └── processed/    # Intermediate processing results
 │
 ├── results/
-│   ├── batch_results.csv      # Метрики качества для всех участников
-│   ├── dice_distribution.png  # Гистограмма распределения Dice Score
-│   └── visuals/               # PNG-визуализации (зеленый - авто, красный — ручная)
+│   ├── batch_results.csv      # Quality metrics for all participants
+│   ├── dice_distribution.png  # Dice Score distribution histogram
+│   └── visuals/               # PNG visualizations (green — automatic, red — manual)
 │
 ├── src/
-│   ├── load_data.m             # Загрузка данных
-│   ├── read_nifti_octave.m     # Парсинг файлов NIfTI
-│   ├── segment_lesion.m        # Алгоритм сегментации
-│   ├── batch_evaluate.m        # Пакетная обработка участников
-│   └── simple_stats.m          # Расчет и визуализация статистики
+│   ├── load_data.m             # Data loading
+│   ├── read_nifti_octave.m     # NIfTI file parsing
+│   ├── segment_lesion.m        # Segmentation algorithm
+│   ├── batch_evaluate.m        # Batch processing of participants
+│   └── simple_stats.m          # Statistics computation and visualization
 │
-├── docs/                       # Документация и методические материалы
+├── docs/                       # Documentation and methodology materials
 ├── README.md
 ├── LICENSE
 └── CONTRIBUTING.md
 ```
 
----
+## Methodology
 
-## Методология
+The algorithm is implemented in **GNU Octave** (an open-source alternative to MATLAB) and includes the following steps:
 
-Алгоритм реализован на **GNU Octave** (открытый аналог MATLAB) и включает следующие этапы:
+1. **Background removal** — excluding zero intensity values
+2. **Threshold calculation** — 95th percentile of the intensity distribution within the brain region
+3. **Binarization** — voxels above the threshold are marked as lesion area
+4. **Post-processing:**
+   - removal of objects < 100 voxels (noise suppression)
+   - filling holes inside masks (spatial integrity)
 
-1. **Удаление фона** — исключение нулевых значений интенсивности
-2. **Расчет порога** — 95-й перцентиль распределения интенсивностей в области мозга
-3. **Бинаризация** — воксели выше порога как область поражения
-4. **Постобработка:**
-   - удаление объектов < 100 вокселей (шумоподавление)
-   - заполнение отверстий внутри масок (пространственная целостность)
+Quality control is performed using the **Dice Similarity Coefficient** (DSC), comparing results against expert manual annotations from the original ARC dataset.
 
-Для контроля качества рассчитывается **Dice Similarity Coefficient** (DSC) путем сравнения с экспертной ручной разметкой из исходного датасета ARC.
+### Requirements
 
----
-
-### Требования
-
-**Программное обеспечение:**
+**Software:**
 - [GNU Octave](https://www.gnu.org/software/octave/) ≥ 11.1.0
 
-**Пакеты Octave:**
+**Octave packages:**
 ```octave
 pkg install -forge image      % >= 2.18.2
 pkg install -forge datatypes  % >= 1.1.8
 pkg install -forge statistics % >= 1.8.1
 ```
 
-**Системные требования:**
-- RAM: ≥ 4 ГБ
-- Диск: ≥ 10 ГБ свободного места
-- CPU: ≥ 2 ГГц
+**System requirements:**
+- RAM: ≥ 4 GB
+- Disk: ≥ 10 GB free space
+- CPU: ≥ 2 GHz
 
-### Запуск обработки
+### Running the pipeline
 
 ```octave
-% 1. Скопируйте данные ARC в data/raw/
-%    (файлы должны соответствовать стандарту BIDS: sub-XXXX)
+% 1. Copy ARC data into data/raw/
+%    (files must follow the BIDS standard: sub-XXXX)
 
-% 2. Откройте GNU Octave и перейдите в корневую директорию
+% 2. Open GNU Octave and navigate to the project root
 cd /path/to/project
 
-% 3. Добавьте src/ в путь поиска
+% 3. Add src/ to the search path
 addpath('src')
 
-% 4. Запустите пакетную обработку
+% 4. Run batch processing
 batch_evaluate('data/raw')
 
-% 5. (Опционально) Визуализируйте статистику
+% 5. (Optional) Visualize statistics
 simple_stats()
 ```
 
-**Результаты обработки** автоматически сохраняются:
-- маски: `data/masks/`
-- визуализации: `results/visuals/`
-- метрики: `results/batch_results.csv`
+**Processing results** are saved automatically:
+- masks: `data/masks/`
+- visualizations: `results/visuals/`
+- metrics: `results/batch_results.csv`
 
-## Ограничения алгоритма
+## Algorithm limitations
 
->**Важно:** результаты автоматической сегментации **не предназначены для клинического применения** без экспертной верификации нейрорадиолога.
+> **Important:** automatic segmentation results are **not intended for clinical use** without expert verification by a neuroradiologist.
 
-**Систематические ошибки:**
-- завышение объёма очага в среднем на **19.6%** (захват перивентрикулярных областей и CSF)
-- снижение качества для хронических очагов с низким контрастом
-- порог чувствительности: очаги < 5 мм не сегментируются
+**Systematic errors:**
+- lesion volume overestimation by an average of **19.6%** (capturing periventricular areas and CSF)
+- reduced quality for chronic low-contrast lesions
+- sensitivity threshold: lesions < 5 mm are not segmented
 
----
+## Citation
 
-## Цитирование
-
-При использовании датасета в публикациях, диссертациях или иных исследовательских работах необходимо ссылаться на данный проект и цитировать оригинальный датасет Aphasia Recovery Cohort:
+If you use this dataset in publications, theses, or other research work, please cite this project as well as the original Aphasia Recovery Cohort dataset:
 
 ```bibtex
 @dataset{arc_lesion_segmentation,
   title     = {ARC Lesion Segmentation Dataset},
-  note      = {Автоматическая сегментация очагов поражения мозга на основе Aphasia Recovery Cohort},
+  note      = {Automatic segmentation of brain lesions based on the Aphasia Recovery Cohort},
   url       = {https://openneuro.org/datasets/ds004884}
 }
 ```
 
----
+## Ethics and confidentiality
 
-## Этика и конфиденциальность
+Source ARC data has been anonymized in accordance with **Safe Harbor guidelines**, including the application of the `spm_deface` algorithm to remove identifying information.
 
-Исходные данные ARC прошли анонимизацию в соответствии с требованиями **Safe Harbor guidelines**, включая применение алгоритма `spm_deface` для удаления идентифицирующей информации.
+**Prohibited:**
+- attempts to re-identify participants
+- commercial use of the data without prior agreement with the authors
 
-**Запрещается:**
-- попытки повторной идентификации участников
-- использование данных в коммерческих целях без согласования с авторами
+## License
 
-## Лицензия
-
-Исходный код распространяется под лицензией [MIT](LICENSE).  
-Результаты обработки предоставляются для научных, образовательных и исследовательских целей.
+The source code is distributed under the [MIT](LICENSE) license.
+Processing results are provided for scientific, educational, and research purposes.
