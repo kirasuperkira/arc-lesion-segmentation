@@ -1,141 +1,114 @@
-From 2bda39daf4536efb0e2885431c0d80dacd159bd5 Mon Sep 17 00:00:00 2001
-From: Repo Update <you@example.com>
-Date: Sat, 18 Jul 2026 00:18:58 +0000
-Subject: [PATCH] Add product backlog: 5 PBIs with Given/When/Then acceptance
- criteria
+# Backlog: HTTP API для результатов сегментации
 
-Derived from the Feature in docs/requirements/interview-feature.md.
-Covers single-participant lookup, aggregate stats, pagination,
-read-only access control, and backup/restore recovery. Acceptance
-criteria reflect what was actually verified against the implemented
-api/ and db/ (e.g. avg_dice matches the CSV-derived 0.1704).
+Основано на Feature из `docs/requirements/interview-feature.md`.
+Каждый элемент ниже реализован и проверен (см. `api/`, `db/`, `tests/`) —
+критерии приёмки описывают то, что реально проверено, а не то, что
+хотелось бы получить в теории.
 
-Also captures a future (unscheduled) PBI for write access, matching
-the 'Future considerations' section of the Feature.
 ---
- docs/requirements/backlog.md | 114 +++++++++++++++++++++++++++++++++++
- 1 file changed, 114 insertions(+)
- create mode 100644 docs/requirements/backlog.md
 
-diff --git a/docs/requirements/backlog.md b/docs/requirements/backlog.md
-new file mode 100644
-index 0000000..65bae17
---- /dev/null
-+++ b/docs/requirements/backlog.md
-@@ -0,0 +1,114 @@
-+# Product Backlog: HTTP API access to segmentation results
-+
-+Derived from the Feature described in `docs/requirements/interview-feature.md`.
-+Each item below is implemented and verified (see `api/`, `db/`, `tests/`) —
-+acceptance criteria are written as the definition of "done" that was actually
-+checked, not aspirational.
-+
-+---
-+
-+### PBI-1: View a single participant's segmentation metrics
-+
-+**As an** ML engineer,
-+**I want to** retrieve the Dice Score and lesion volumes for a specific
-+participant by their subject code,
-+**so that** I can quickly inspect or debug a single result without opening
-+Octave or the raw CSV file.
-+
-+**Acceptance criteria:**
-+- **Given** a participant with a known `subject_code` exists in the database,
-+  **when** I send `GET /results/{subject_code}`,
-+  **then** the response is `200 OK` and includes `dice_score`,
-+  `lesion_volume_gt`, and `lesion_volume_auto`.
-+- **Given** a `subject_code` that does not exist,
-+  **when** I send `GET /results/{subject_code}`,
-+  **then** the response is `404 Not Found` with an error message naming the
-+  missing subject.
-+- **Given** the endpoint is documented,
-+  **when** I open `/docs`,
-+  **then** `GET /results/{subject_code}` appears with its response schema.
-+
-+---
-+
-+### PBI-2: View aggregate statistics across the cohort
-+
-+**As an** ML engineer,
-+**I want to** retrieve mean/min/max Dice Score and the total participant
-+count for the whole processed cohort,
-+**so that** I can monitor overall pipeline quality without recomputing
-+statistics manually.
-+
-+**Acceptance criteria:**
-+- **Given** the database contains processed participants,
-+  **when** I send `GET /stats`,
-+  **then** the response is `200 OK` and includes `participants_count`,
-+  `avg_dice`, `min_dice`, and `max_dice`.
-+- **Given** the values in `results/batch_results.csv`,
-+  **when** I compare them to the `/stats` response after seeding,
-+  **then** `avg_dice` matches the CSV-derived average (0.1704) within
-+  rounding.
-+
-+---
-+
-+### PBI-3: Browse the full list of processed participants
-+
-+**As an** ML engineer,
-+**I want to** list processed participants with pagination,
-+**so that** I can page through results without loading the entire dataset
-+at once.
-+
-+**Acceptance criteria:**
-+- **Given** more participants exist than the requested `limit`,
-+  **when** I send `GET /results?limit=5`,
-+  **then** the response contains at most 5 items.
-+- **Given** an invalid `limit` (0, negative, non-numeric, or above the
-+  maximum of 500),
-+  **when** I send the request,
-+  **then** the response is `422 Unprocessable Entity`.
-+
-+---
-+
-+### PBI-4: Restrict API access to read-only
-+
-+**As a** QA engineer responsible for data integrity,
-+**I want** the API to connect to the database with a role that only has
-+`SELECT` privileges,
-+**so that** a bug in the API can never accidentally modify or delete
-+segmentation results while the algorithm is still being validated.
-+
-+**Acceptance criteria:**
-+- **Given** the `qa_readonly` role defined in `db/schema.sql`,
-+  **when** I inspect its grants,
-+  **then** it has `SELECT` only — no `INSERT`, `UPDATE`, or `DELETE` on any
-+  table.
-+- **Given** the API is configured to connect as `qa_readonly`,
-+  **when** any write operation is attempted against the database through
-+  that connection,
-+  **then** PostgreSQL rejects it with a permissions error.
-+
-+---
-+
-+### PBI-5: Recover the dataset from a backup
-+
-+**As a** QA/DevOps engineer,
-+**I want** documented `backup.sh` / `restore.sh` scripts,
-+**so that** the segmentation results dataset can be recovered after
-+accidental data loss or a failed migration.
-+
-+**Acceptance criteria:**
-+- **Given** a populated database,
-+  **when** I run `db/backup.sh`,
-+  **then** a timestamped `.dump` file is created under `db/backups/`.
-+- **Given** a backup file and an empty or corrupted database,
-+  **when** I run `db/restore.sh <file>`,
-+  **then** the database is restored and `SELECT COUNT(*) FROM participants`
-+  returns the original row count.
-+
-+---
-+
-+## Future backlog (not yet scheduled)
-+
-+- **PBI-6 (future):** Write-capable endpoint for flagging a participant's
-+  result as "needs re-review" — requires a second, write-capable database
-+  role and an audit trail (see "Future considerations" in
-+  `docs/requirements/interview-feature.md`).
--- 
-2.43.0
+### PBI-1: Просмотр метрик сегментации одного участника
+
+**Как** ML-инженер,
+**я хочу** получить Dice Score и объёмы очага для конкретного участника
+по его коду,
+**чтобы** быстро посмотреть или отладить один результат, не открывая
+Octave и не копаясь в сыром CSV-файле.
+
+**Критерии приёмки:**
+- **Дано:** участник с известным `subject_code` существует в базе данных,
+  **когда** отправляю `GET /results/{subject_code}`,
+  **тогда** ответ `200 OK` и содержит `dice_score`, `lesion_volume_gt`,
+  `lesion_volume_auto`.
+- **Дано:** `subject_code`, которого не существует,
+  **когда** отправляю `GET /results/{subject_code}`,
+  **тогда** ответ `404 Not Found` с сообщением об ошибке, где указан
+  отсутствующий код участника.
+- **Дано:** эндпоинт задокументирован,
+  **когда** открываю `/docs`,
+  **тогда** `GET /results/{subject_code}` присутствует в списке со схемой ответа.
+
+---
+
+### PBI-2: Просмотр агрегированной статистики по всей выборке
+
+**Как** ML-инженер,
+**я хочу** получить средний/мин/макс Dice Score и общее количество
+обработанных участников,
+**чтобы** отслеживать общее качество пайплайна без ручного пересчёта
+статистики.
+
+**Критерии приёмки:**
+- **Дано:** в базе данных есть обработанные участники,
+  **когда** отправляю `GET /stats`,
+  **тогда** ответ `200 OK` и содержит `participants_count`, `avg_dice`,
+  `min_dice`, `max_dice`.
+- **Дано:** значения из `results/batch_results.csv`,
+  **когда** сравниваю их с ответом `/stats` после загрузки данных,
+  **тогда** `avg_dice` совпадает со средним значением из CSV (0.1704)
+  с точностью до округления.
+
+---
+
+### PBI-3: Постраничный просмотр списка обработанных участников
+
+**Как** ML-инженер,
+**я хочу** получать список участников с пагинацией,
+**чтобы** просматривать результаты постранично, не загружая весь набор
+данных целиком.
+
+**Критерии приёмки:**
+- **Дано:** участников больше, чем запрошенный `limit`,
+  **когда** отправляю `GET /results?limit=5`,
+  **тогда** ответ содержит не более 5 элементов.
+- **Дано:** некорректный `limit` (0, отрицательный, нечисловой или выше
+  максимума в 500),
+  **когда** отправляю такой запрос,
+  **тогда** ответ `422 Unprocessable Entity`.
+
+---
+
+### PBI-4: Ограничение доступа API только на чтение
+
+**Как** QA-инженер, отвечающий за целостность данных,
+**я хочу**, чтобы API подключался к базе данных с ролью, у которой есть
+только права `SELECT`,
+**чтобы** ошибка в коде API никогда не могла случайно изменить или удалить
+результаты сегментации, пока алгоритм ещё валидируется.
+
+**Критерии приёмки:**
+- **Дано:** роль `qa_readonly`, определённая в `db/schema.sql`,
+  **когда** проверяю её права,
+  **тогда** у неё есть только `SELECT` — ни `INSERT`, ни `UPDATE`, ни
+  `DELETE` ни на одной таблице.
+- **Дано:** API настроен на подключение под ролью `qa_readonly`,
+  **когда** через это подключение предпринимается любая попытка записи
+  в базу данных,
+  **тогда** PostgreSQL отклоняет её с ошибкой прав доступа.
+
+---
+
+### PBI-5: Восстановление набора данных из резервной копии
+
+**Как** QA/DevOps-инженер,
+**я хочу** иметь задокументированные скрипты `backup.sh` / `restore.sh`,
+**чтобы** можно было восстановить набор результатов сегментации после
+случайной потери данных или неудачной миграции.
+
+**Критерии приёмки:**
+- **Дано:** заполненная база данных,
+  **когда** запускаю `db/backup.sh`,
+  **тогда** создаётся файл `.dump` с меткой времени в `db/backups/`.
+- **Дано:** файл резервной копии и пустая или повреждённая база данных,
+  **когда** запускаю `db/restore.sh <файл>`,
+  **тогда** база данных восстанавливается, и `SELECT COUNT(*) FROM participants`
+  возвращает исходное количество строк.
+
+---
+
+## Backlog на будущее (пока не запланировано)
+
+- **PBI-6 (будущее):** эндпоинт с возможностью записи для пометки
+  результата участника как "требует повторной проверки" — потребует
+  второй, доступной для записи роли БД и журнала изменений (см. раздел
+  "Возможные доработки" в `docs/requirements/interview-feature.md`).
