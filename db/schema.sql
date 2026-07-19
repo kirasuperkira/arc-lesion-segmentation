@@ -1,14 +1,3 @@
--- =============================================================
--- ARC Lesion Segmentation — PostgreSQL schema
--- =============================================================
--- Run as a superuser / owner of the target database, e.g.:
---   psql -U postgres -d arc_lesion -f db/schema.sql
--- =============================================================
-
--- ---------------------------------------------------------------
--- Tables
--- ---------------------------------------------------------------
-
 CREATE TABLE IF NOT EXISTS processing_runs (
     id               SERIAL PRIMARY KEY,
     algorithm_version VARCHAR(50)  NOT NULL,
@@ -17,7 +6,6 @@ CREATE TABLE IF NOT EXISTS processing_runs (
     status           VARCHAR(20)  NOT NULL DEFAULT 'completed'
         CHECK (status IN ('running', 'completed', 'failed'))
 );
-
 CREATE TABLE IF NOT EXISTS participants (
     id             SERIAL PRIMARY KEY,
     subject_code   VARCHAR(20)  NOT NULL UNIQUE,
@@ -30,17 +18,8 @@ CREATE TABLE IF NOT EXISTS participants (
 
 CREATE INDEX IF NOT EXISTS idx_participants_dice_score
     ON participants (dice_score);
-
 CREATE INDEX IF NOT EXISTS idx_participants_run_id
     ON participants (run_id);
-
--- ---------------------------------------------------------------
--- Roles & privileges
--- ---------------------------------------------------------------
--- qa_readonly: used by the API service and by external QA engineers.
--- Read-only on purpose — no INSERT / UPDATE / DELETE rights,
--- so the API can never mutate the dataset it exposes.
--- ---------------------------------------------------------------
 
 DO
 $$
@@ -55,6 +34,5 @@ GRANT CONNECT ON DATABASE arc_lesion TO qa_readonly;
 GRANT USAGE ON SCHEMA public TO qa_readonly;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO qa_readonly;
 
--- Make sure future tables are covered automatically as well.
 ALTER DEFAULT PRIVILEGES IN SCHEMA public
     GRANT SELECT ON TABLES TO qa_readonly;

@@ -11,7 +11,6 @@ end
 function filtered_mask = bwconncomp_filter(mask, min_size)
     [L, num] = bwlabeln(mask);
     filtered_mask = false(size(mask));
-
     for i = 1:num
         component = (L == i);
         if sum(component(:)) >= min_size

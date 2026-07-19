@@ -1,20 +1,8 @@
-"""
-Load results/batch_results.csv (produced by src/batch_evaluate.m) into
-the PostgreSQL `participants` table.
-
-Usage:
-    python db/seed.py
-    python db/seed.py --csv results/batch_results.csv --dsn postgresql://postgres:postgres@localhost:5432/arc_lesion
-
-Environment variable DATABASE_URL is used as a fallback for --dsn.
-"""
 import argparse
 import csv
 import os
 import sys
-
 import psycopg2
-
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -36,7 +24,6 @@ def parse_args() -> argparse.Namespace:
         help="Label recorded in processing_runs.algorithm_version",
     )
     return parser.parse_args()
-
 
 def main() -> int:
     args = parse_args()
@@ -88,13 +75,12 @@ def main() -> int:
         conn.commit()
         print(f"Loaded {inserted} participants into run_id={run_id}.")
         return 0
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         conn.rollback()
         print(f"Seed failed, rolled back: {exc}", file=sys.stderr)
         return 1
     finally:
         conn.close()
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

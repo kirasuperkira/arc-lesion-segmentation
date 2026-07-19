@@ -5,8 +5,7 @@
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
 
-        <!-- Main flow nodes -->
-        <mxCell id="n_draft" value="Draft&#10;(requirement captured from interview)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="n_draft" value="Draft&#10;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="60" y="60" width="160" height="70" as="geometry" />
         </mxCell>
 
@@ -30,7 +29,6 @@
           <mxGeometry x="940" y="220" width="160" height="70" as="geometry" />
         </mxCell>
 
-        <!-- Change loop -->
         <mxCell id="n_change" value="Change Request&#10;(new info / scope change)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
           <mxGeometry x="500" y="360" width="160" height="70" as="geometry" />
         </mxCell>
@@ -39,7 +37,6 @@
           <mxGeometry x="280" y="360" width="160" height="70" as="geometry" />
         </mxCell>
 
-        <!-- Main flow edges -->
         <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="n_draft" target="n_review">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
@@ -56,7 +53,6 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- Change request loop -->
         <mxCell id="e6" value="change requested" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=1;" edge="1" parent="1" source="n_done" target="n_change">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
@@ -67,7 +63,6 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- Also allow change requests to originate from backlog/dev, not only done -->
         <mxCell id="e9" value="change requested" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;dashed=1;exitX=0.25;exitY=1;entryX=0.75;entryY=0;" edge="1" parent="1" source="n_dev" target="n_change">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>

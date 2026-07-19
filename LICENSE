@@ -1,3 +1,20 @@
+This repository contains two distinct kinds of content, licensed separately:
+
+  (A) SOURCE CODE (everything under src/, scripts/, tests/) — licensed
+      under the plain MIT License below, with NO additional restrictions.
+
+  (B) DATASET AND PROCESSED RESULTS (everything under data/, results/,
+      including automatically generated lesion masks, PNG visualizations,
+      and quality metric tables) — licensed under MIT PLUS the additional
+      terms in the section "Additional Terms for Dataset and Processed
+      Results" further down in this file.
+
+If you only intend to reuse the code, part (A) is all you need to read.
+
+================================================================================
+(A) MIT LICENSE — SOURCE CODE
+================================================================================
+
 MIT License
 
 Copyright (c) 2024 ARC Lesion Segmentation Project Contributors
@@ -20,14 +37,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
----
+This part (A) applies, without any additional restriction, to the source
+code only. It does NOT apply, on its own, to the dataset and processed
+results described in part (B) below.
 
-ADDITIONAL TERMS FOR DATASET AND PROCESSED RESULTS
-(Supplementary to the MIT License above)
+================================================================================
+(B) ADDITIONAL TERMS FOR DATASET AND PROCESSED RESULTS
+================================================================================
 
 The processed results included in this repository — including automatically
 generated lesion masks, PNG visualizations, and quality metric tables — are
-provided for scientific, educational, and research purposes only.
+provided for scientific, educational, and research purposes only, under the
+MIT License above PLUS the following additional terms:
 
 1. COMMERCIAL USE: Commercial use of the processed results requires prior
    written agreement with the project authors.
@@ -52,3 +73,7 @@ provided for scientific, educational, and research purposes only.
 6. MODIFICATIONS TO TERMS: The project authors reserve the right to amend
    these additional terms for future versions of the dataset. Amendments
    apply to subsequently released versions only.
+
+If any term in this section (B) conflicts with the plain MIT License in
+section (A) as applied to the dataset and processed results, section (B)
+controls for that content.

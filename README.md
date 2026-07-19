@@ -74,6 +74,8 @@ pkg install -forge datatypes  % >= 1.1.8
 pkg install -forge statistics % >= 1.8.1
 ```
 
+> Note: `datatypes` is required by `statistics` ≥ 1.8.0 on Octave ≥ 11.1, so it must be installed even though it is not called directly from `src/*.m`.
+
 **System requirements:**
 - RAM: ≥ 4 GB
 - Disk: ≥ 10 GB free space
@@ -134,5 +136,5 @@ Source ARC data has been anonymized in accordance with **Safe Harbor guidelines*
 
 ## License
 
-The source code is distributed under the [MIT](LICENSE) license.
-Processing results are provided for scientific, educational, and research purposes.
+This repository's **source code** (`src/`, `scripts/`, `tests/`) is distributed under the [MIT License](LICENSE).
+**Processed results and data** (`data/`, `results/`) are provided for scientific, educational, and research purposes only, under the additional terms described in [LICENSE](LICENSE#additional-terms-for-dataset-and-processed-results).

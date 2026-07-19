@@ -4,7 +4,6 @@ function batch_evaluate(data_dir)
     addpath('src');
     all_files = dir(fullfile(data_dir, '*T2w*.nii'));
     file_names = {all_files.name};
-    
     subject_ids = {};
     for i = 1:length(file_names)
         parts = strsplit(file_names{i}, '_');
@@ -13,7 +12,6 @@ function batch_evaluate(data_dir)
     subject_ids = unique(subject_ids);
     
     fprintf('Participants found: %d\n', length(subject_ids));
-    
     results_subjects = cell(length(subject_ids), 1);
     results_dice = zeros(length(subject_ids), 1);
     results_vol_gt = zeros(length(subject_ids), 1);
@@ -25,10 +23,8 @@ function batch_evaluate(data_dir)
         try
             [img, gt_mask, ~] = load_data(data_dir, sub_id);
             auto_mask = segment_lesion(img);
-            
             intersection = sum(auto_mask(:) & gt_mask(:));
             dice = 2 * intersection / (sum(auto_mask(:)) + sum(gt_mask(:)) + eps);
-            
             results_subjects{i} = sub_id;
             results_dice(i) = dice;
             results_vol_gt(i) = sum(gt_mask(:));
@@ -36,7 +32,6 @@ function batch_evaluate(data_dir)
             
             mask_path = fullfile('data/masks', [sub_id '_auto_mask.mat']);
             save(mask_path, 'auto_mask');
-            
             overlap_per_slice = squeeze(sum(gt_mask & auto_mask, [1 2]));
             [~, best_slice_idx] = max(overlap_per_slice);
             if best_slice_idx == 0
@@ -46,20 +41,16 @@ function batch_evaluate(data_dir)
             t2_slice = img(:, :, best_slice_idx);
             gt_slice = gt_mask(:, :, best_slice_idx);
             auto_slice = auto_mask(:, :, best_slice_idx);
-            
             t2_norm = mat2gray(t2_slice);
             rgb_img = cat(3, t2_norm, t2_norm, t2_norm);
-            
             rgb_img(:,:,1) = rgb_img(:,:,1) + 0.5 * double(gt_slice);
             rgb_img(:,:,2) = rgb_img(:,:,2) + 0.5 * double(auto_slice);
             rgb_img = min(rgb_img, 1);
-            
             img_path = fullfile('results/visuals', [sub_id '_overlay.png']);
             imwrite(rgb_img, img_path);
             
             fprintf('   Dice: %.4f | GT: %d | Auto: %d\n', ...
                 dice, sum(gt_mask(:)), sum(auto_mask(:)));
-            
         catch ME
             results_subjects{i} = sub_id;
             results_dice(i) = NaN;

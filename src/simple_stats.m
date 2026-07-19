@@ -1,8 +1,6 @@
 function simple_stats(csv_path)
-
     fid = fopen(csv_path, 'r');
     fgetl(fid);
-    
     dice_vals = [];
     vol_gt = [];
     
@@ -37,7 +35,6 @@ function simple_stats(csv_path)
     title(sprintf('Dice Score distribution (N=%d, Mean=%.3f)', length(dice_vals), mean(dice_vals)));
     xlim([0, 1]);
     grid on;
-    
     saveas(gcf, 'results/dice_distribution.png');
     fprintf('\nChart saved: results/dice_distribution.png\n');
 end

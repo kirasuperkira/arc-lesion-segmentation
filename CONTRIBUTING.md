@@ -37,4 +37,4 @@ By contributing to this project, you agree to follow the ethical standards for w
 
 ## Contact the authors
 
-For questions not suited to a public Issue, you can reach out at kirasuperkira21@gmail.com.
+For questions not suited to a public Issue, you can reach out at kira.d.kravchenko@gmail.com
