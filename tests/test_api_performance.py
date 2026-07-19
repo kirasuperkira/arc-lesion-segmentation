@@ -1,4 +1,5 @@
 import time
+
 MAX_RESPONSE_TIME_SECONDS = 1.0
 
 def test_health_responds_within_threshold(client):

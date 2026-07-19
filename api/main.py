@@ -1,6 +1,8 @@
 from typing import List
+
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
+
 from . import db
 from .schemas import HealthResponse, ParticipantResult, StatsResponse
 
