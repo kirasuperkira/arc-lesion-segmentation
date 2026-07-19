@@ -11,11 +11,7 @@ This repository contains two distinct kinds of content, licensed separately:
 
 If you only intend to reuse the code, part (A) is all you need to read.
 
-================================================================================
 (A) MIT LICENSE — SOURCE CODE
-================================================================================
-
-MIT License
 
 Copyright (c) 2024 ARC Lesion Segmentation Project Contributors
 
@@ -41,9 +37,7 @@ This part (A) applies, without any additional restriction, to the source
 code only. It does NOT apply, on its own, to the dataset and processed
 results described in part (B) below.
 
-================================================================================
 (B) ADDITIONAL TERMS FOR DATASET AND PROCESSED RESULTS
-================================================================================
 
 The processed results included in this repository — including automatically
 generated lesion masks, PNG visualizations, and quality metric tables — are
